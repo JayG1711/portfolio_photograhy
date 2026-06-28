@@ -119,8 +119,7 @@ async function generateStreamingResponse(
     });
     
     const result = await model.generateContentStream({
-      contents,
-      systemInstruction: systemPrompt
+      contents
     });
 
     return new ReadableStream({
@@ -144,7 +143,7 @@ async function generateStreamingResponse(
     // ATTEMPT 2: Groq fallback
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
-      throw new Error('Both Gemini and Groq unavailable.');
+      throw new Error('Both Gemini and Groq unavailable. Gemini Error: ' + (geminiError as Error).message);
     }
 
     const { default: Groq } = await import('groq-sdk');
@@ -188,7 +187,7 @@ export async function POST(request: Request) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'AI unavailable.' }, { status: 500 }
+        { error: 'AI unavailable. API Key missing.' }, { status: 500 }
       );
     }
 
@@ -234,7 +233,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(
-      { error: 'Something went wrong.' }, { status: 500 }
+      { error: (error as Error).message || 'Something went wrong.' }, { status: 500 }
     );
   }
 }
