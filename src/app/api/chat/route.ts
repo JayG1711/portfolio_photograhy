@@ -113,14 +113,33 @@ async function generateStreamingResponse(
   // ATTEMPT 1: Gemini
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      generationConfig: { maxOutputTokens: 400 }
-    });
     
-    const result = await model.generateContentStream({
-      contents
-    });
+    // We will try gemini-1.5-flash-latest as the primary, since 1.5-flash returned 404
+    let model;
+    try {
+      model = genAI.getGenerativeModel({
+        model: 'gemini-1.5-flash-latest',
+        generationConfig: { maxOutputTokens: 400 }
+      });
+      // Just ping it to see if it throws 404 (getGenerativeModel is lazy, generateContentStream throws)
+    } catch {
+      model = genAI.getGenerativeModel({
+        model: 'gemini-pro',
+        generationConfig: { maxOutputTokens: 400 }
+      });
+    }
+
+    let result;
+    try {
+      result = await model.generateContentStream({ contents });
+    } catch (e) {
+      // If 1.5-flash throws 404 because of region/key restrictions, try gemini-pro
+      const fallbackModel = genAI.getGenerativeModel({
+        model: 'gemini-pro',
+        generationConfig: { maxOutputTokens: 400 }
+      });
+      result = await fallbackModel.generateContentStream({ contents });
+    }
 
     return new ReadableStream({
       async start(controller) {
