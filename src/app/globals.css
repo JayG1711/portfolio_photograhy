@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@property --background {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #050505;
+}
+
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d4af37;
+}
+
+:root {
+  --background: #050505;
+  --foreground: #f3f4f6;
+  --accent: #d4af37;
+  --card: #111111;
+  --border: #222222;
+  transition: --background 3s ease, --accent 3s ease;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+.glass {
+  background: rgba(17, 17, 17, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Hide scrollbar for a cinematic feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.hide-scrollbar::-webkit-scrollbar { 
+  display: none; 
+}
+.hide-scrollbar { 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+@keyframes grain {
+  0%, 100% { background-position: 0% 0%; }
+  25% { background-position: 50% 25%; }
+  75% { background-position: 25% 75%; }
+}
+
+.animate-grain {
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes warmPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.animate-warm-pulse {
+  animation: warmPulse 2s ease-in-out infinite;
+}
