@@ -9,6 +9,7 @@ import { getFavourites } from "@/lib/favourites";
 import { Photo } from "@/types/photo";
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
+import { useUI } from "@/lib/uiContext";
 
 export default function GalleryClient({ photosData }: { photosData: Photo[] }) {
   const [activeCategory, setActiveCategory] = useState("Best");
@@ -62,13 +63,19 @@ export default function GalleryClient({ photosData }: { photosData: Photo[] }) {
     return allGalleryPhotos.filter(p => p.curation?.category?.trim() === activeCategory);
   }, [allGalleryPhotos, activeCategory, favourites]);
 
+  const { setLightboxOpen } = useUI();
+
   // Lightbox handlers (needs to know which array we are using based on viewMode)
   // Palette mode passes the *original* array index, so we always use allGalleryPhotos for lightbox
   const openLightbox = (photo: Photo) => {
     const index = allGalleryPhotos.findIndex(p => p.id === photo.id);
     setLightboxIndex(index >= 0 ? index : null);
+    if (index >= 0) setLightboxOpen(true);
   };
-  const closeLightbox = () => setLightboxIndex(null);
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+    setLightboxOpen(false);
+  };
   const refreshFavourites = () => setFavourites(getFavourites());
   
   const handleNext = () => {

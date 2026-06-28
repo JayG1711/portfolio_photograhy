@@ -5,8 +5,10 @@ import FilmPreloader from "./FilmPreloader";
 import CustomCursor from "./CustomCursor";
 import Navbar from "./Navbar";
 import SkyBackground from "./SkyBackground";
+import FloatingChatbot from "./FloatingChatbot";
 import { getCurrentSkyTheme } from "@/lib/skyTheme";
 import type { SkyTheme } from "@/lib/skyTheme";
+import { UIProvider } from "@/lib/uiContext";
 
 export default function ClientBody({ children, className }: { children: React.ReactNode, className: string }) {
   const [preloaderDone, setPreloaderDone] = useState(false);
@@ -34,13 +36,16 @@ export default function ClientBody({ children, className }: { children: React.Re
 
   return (
     <body className={`${className} ${!preloaderDone ? "overflow-hidden" : ""} relative isolate`}>
-      <SkyBackground theme={skyTheme} />
-      <FilmPreloader onComplete={() => setPreloaderDone(true)} />
-      <CustomCursor />
-      <Navbar />
-      <main className="relative z-10 min-h-screen">
-        {children}
-      </main>
+      <UIProvider>
+        <SkyBackground theme={skyTheme} />
+        <FilmPreloader onComplete={() => setPreloaderDone(true)} />
+        <CustomCursor />
+        <Navbar />
+        <FloatingChatbot />
+        <main className="relative z-10 min-h-screen">
+          {children}
+        </main>
+      </UIProvider>
     </body>
   );
 }

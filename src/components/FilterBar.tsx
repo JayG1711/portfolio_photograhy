@@ -42,7 +42,7 @@ export default function FilterBar({ categories, activeCategory, onCategoryChange
     >
       <div className="container mx-auto flex flex-wrap gap-4 justify-between items-center">
         {/* Left: Categories (Hidden in Palette Mode) */}
-        <div className={`flex flex-wrap gap-2 transition-opacity duration-300 ${viewMode === 'palette' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className={`flex flex-nowrap overflow-x-auto hide-scrollbar gap-2 pb-1 transition-opacity duration-300 w-[calc(100%-100px)] md:w-auto ${viewMode === 'palette' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <AnimatePresence>
             {hasFavourites && (
               <motion.button
@@ -51,7 +51,7 @@ export default function FilterBar({ categories, activeCategory, onCategoryChange
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 onClick={() => onCategoryChange("Favourites")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all duration-300 border ${
+                className={`flex shrink-0 items-center gap-2 px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all duration-300 border ${
                   activeCategory === "Favourites"
                     ? "bg-accent text-black border-accent font-semibold"
                     : "bg-accent/10 text-accent border-accent/20 hover:bg-accent/20"
@@ -67,7 +67,7 @@ export default function FilterBar({ categories, activeCategory, onCategoryChange
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all duration-300 ${
+              className={`px-4 shrink-0 py-2 rounded-full text-xs uppercase tracking-widest transition-all duration-300 ${
                 activeCategory === category 
                   ? "bg-white text-black font-semibold" 
                   : "bg-transparent text-gray-400 hover:text-white border border-white/10 hover:border-white/30"
